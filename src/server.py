@@ -12,6 +12,10 @@ class server:
         self.__json = js
 
     @property
+    def json(self):
+        return self.__json
+
+    @property
     def hostname(self):
         return self.__json["hostname"]
     
@@ -63,7 +67,7 @@ class server:
     def wgpeer(self, port=None, allowedips=None):
         if port is None:
             port = random.randrange(4000, 32768)
-        
+
         if allowedips is None:
             allowedips = ['0.0.0.0/0']
 

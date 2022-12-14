@@ -13,12 +13,11 @@ import time
 import urllib.request
 
 class benchmark:
-    def __init__(self, privkey, address, server):
-        self.__privkey = privkey
-        self.__server = server
-        self.__address = address
+    def __init__(self, wgconf, server):
         self.__ifname = 'wgbench0'
+        self.__server = server
         self.__conffile = f'/tmp/wireguard/{self.__ifname}.conf'
+        self.__confdata = self.wgparseinterface(wgconf)
 
         ## Results
         self.__ping_min = None
@@ -56,17 +55,27 @@ class benchmark:
     def upload_speed(self):
         return self.__upload_speed
 
+    ## Parse a wireguard config file to extract just the [Interface] section.
+    def wgparseinterface(self, filename):
+        section = None
+        confdata = []
+    
+        with open(filename, 'r') as fp:
+            for line in fp:
+                line = line.strip()
+                if len(line) > 0 and line[0] == '[' and line[-1] == ']':
+                    section = line
+                if section == '[Interface]':
+                    confdata.append(line)
+        
+        return '\n'.join(confdata)
+
     def connect(self):
         ## Configure the wireguard interface
         os.makedirs('/tmp/wireguard', exist_ok=True)
         with open(self.__conffile, 'w') as fp:
-            print(f'[Interface]', file=fp)
-            print(f'Address = {self.__address}/32', file=fp)
-            print(f'PrivateKey = {self.__privkey}', file=fp)
-            print(f'DNS = 10.64.0.1', file=fp)
-            print(f'Table = auto', file=fp)
-            print(f'MTU = 1420', file=fp)
-            print(f'', file=fp)
+            print(self.__confdata, file=fp)
+            print('', file=fp)
             print(self.__server.wgpeer(), file=fp)
         os.chmod(self.__conffile, 0o660)
 
