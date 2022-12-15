@@ -103,8 +103,10 @@ class benchmark:
             return False
         
         ## Run the speedtest
+        # TODO: We can make this a little easier on speedtest.net if we use the
+        # python API and cache the server list between runs.
         try:
-            result = subprocess.run(['speedtest-cli', '--json', '--bytes'], stdout=subprocess.PIPE, text=True)
+            result = subprocess.run(['speedtest-cli', '--json'], stdout=subprocess.PIPE, text=True)
             js = json.loads(result.stdout)
             self.__download_speed = js['download']
             self.__upload_speed = js['upload']

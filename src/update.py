@@ -12,13 +12,13 @@ from benchmark import benchmark
 
 def pretty_speed(speed):
     if (speed > 1000000000):
-        return f'{speed / 1000000000:.2f} GB/s'
+        return f'{speed / 1000000000:.2f} Gbps'
     elif (speed > 1000000):
-        return f'{speed / 1000000:.2f} MB/s'
+        return f'{speed / 1000000:.2f} Mbps'
     elif (speed > 1000):
-        return f'{speed / 1000:.2f} kB/s'
+        return f'{speed / 1000:.2f} kbps'
     else:
-        return f'{speed} B/s'
+        return f'{speed} bps'
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
@@ -55,7 +55,7 @@ if __name__ == "__main__":
         print("Required argument not found: --config FILE", file=sys.stderr)
         sys.exit(1)
 
-    print(f'  {"HOSTNAME":24} {"LOCATION":12} {"IPv4-ADDR":16} {"PUBKEY":48}  {"LATENCY":12}  {"DOWNLOAD":12}  {"UPLOAD":12}')
+    print(f'  {"HOSTNAME":16} {"LOCATION":16} {"IPv4-ADDR":16} {"PUBKEY":48}  {"LATENCY":12}  {"DOWNLOAD":12}  {"UPLOAD":12}')
     for s in serverlist:
         if s.vpntype != "wireguard":
             continue
@@ -63,7 +63,7 @@ if __name__ == "__main__":
             continue
         
         # Print server information
-        print(f'  {s.hostname:24} {s.city_name:12} {s.ipv4_addr_in:16} {s.pubkey:48}  ', end='')
+        print(f'  {s.hostname:16} {s.city_name:16} {s.ipv4_addr_in:16} {s.pubkey:48}  ', end='')
         sys.stdout.flush()
 
         # Connect and prepare to run the benchmark
