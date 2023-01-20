@@ -10,3 +10,6 @@ RUN \
     wireguard \
     wireguard-tools
 
+COPY /src /root
+
+RUN /root/update.py
